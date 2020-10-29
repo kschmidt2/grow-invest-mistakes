@@ -12,13 +12,13 @@ Highcharts.setOptions({
     }
 });
 
-let chartId = document.getElementById("chart-container");
+let chartIdMistakes = document.getElementById("chart-container-invest-mistakes");
 
 // checks for the chart ID and displays a backup image if the browser can't find it
 setTimeout(function() {
-    if(chartId.innerHTML === "") {
+    if(chartIdMistakes.innerHTML === "") {
         // console.log('noId');
-        let chartArea = document.getElementsByClassName("chart-area");
+        let chartArea = document.getElementsByClassName("chart-area-invest-mistakes");
         for(var i = 0; i < chartArea.length; i++) {
             chartArea[i].style.display = "none";
         } 
@@ -30,7 +30,7 @@ setTimeout(function() {
 },500);
 
 function drawHighcharts() {
-    Highcharts.chart(chartId, {
+    Highcharts.chart(chartIdMistakes, {
         chart: {
             type: 'bar',
             styledMode: true,
@@ -42,14 +42,30 @@ function drawHighcharts() {
         title: {
             text: null
         },
-        data: {
-            googleSpreadsheetKey: '1YOKb5l2VM4aAB2r20N_1aT_1vEajYrP3U-U3A6lZbC0'
-        },
+        // data: {
+        //     googleSpreadsheetKey: '1jZBUloPNR0jN2daYZn77CWm9aa2Qt7PJhxl-i3AXork',
+        //     endColumn: 1
+        // },
+        series: [{
+            data: [26418,8358,1908,-1850,-4153]
+        }],
         // for bar charts only
         plotOptions: {
             series: {
                 groupPadding: 0.1
-            } 
+            },
+            bar: {
+                dataLabels: {
+                    enabled: true,
+                    // format: '${y}',
+                    formatter: function () {
+                        if (this.y < 0) {
+                            return '-$' + (Highcharts.numberFormat(this.y*-1,0,'.',','));
+                        }
+                            return '$' + Highcharts.numberFormat(this.y,0,'.',',');
+                        },
+                } 
+            }
         },
         // for line charts only
         // plotOptions: {
@@ -69,11 +85,7 @@ function drawHighcharts() {
         //     }
         // },
         legend: {
-            align: 'right',
-            symbolRadius: 0,
-            verticalAlign: 'top',
-            x: 10,
-            itemMarginTop: -10
+            enabled: false
         },
         xAxis: {
             labels: {
@@ -82,6 +94,7 @@ function drawHighcharts() {
                 }
             },
             tickLength: 5,
+            categories: ['Stayed fully invested', 'Missed 10 best days', 'Missed 20 best days', 'Missed 30 best days', 'Missed 40 best days'],
             // edits xAxis ticks
             // dateTimeLabelFormats: {
             //     week: '%b. %e',
@@ -94,6 +107,9 @@ function drawHighcharts() {
                 useHTML: true,
                 overflow: 'allow'
             },
+            tickAmount: 5,
+            min: -10000,
+            max: 30000
             // adds commas to thousands
             // formatter: function () {
             //     return Highcharts.numberFormat(this.value,0,'.',',');
@@ -103,8 +119,7 @@ function drawHighcharts() {
             enabled: false
         },
         tooltip: {
-            shadow: false,
-            padding: 10
+            enabled: false
         },
         responsive: {
             rules: [{
